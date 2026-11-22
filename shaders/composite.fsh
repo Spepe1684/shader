@@ -1,5 +1,9 @@
 #version 330 compatibility
 
+// Do note: #include is a "pre-processor directive". These directives are processed *before* your GPU compiles your shaders.
+// Pre-processor directives don't need semi-colons at the end!
+#include "/lib/shadowDistort.glsl"
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;

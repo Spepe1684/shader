@@ -1,5 +1,9 @@
 #version 330 compatibility
 
+// Do note: #include is a "pre-processor directive". These directives are processed *before* your GPU compiles your shaders.
+// Pre-processor directives don't need semi-colons at the end!
+#include "/lib/shadowDistort.glsl"
+
 out vec2 texcoord;
 out vec4 glcolor;
 
