@@ -4,6 +4,8 @@ uniform sampler2D colortex0;
 uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D depthtex0;
+uniform sampler2D shadowtex0;
+
 
  /*
  const int colortex0Format = RGB16;
@@ -50,13 +52,17 @@ void main() {
   vec3 feetPlayerPos = (gbufferModelViewInverse * vec4(viewPos, 1.0)).xyz; // position relative to the feet of the player
   vec3 shadowViewPos = (shadowModelView * vec4(feetPlayerPos, 1.0)).xyz;
   vec4 shadowClipPos = shadowProjection * vec4(shadowViewPos, 1.0);
+	shadowClipPos.z -= 0.001;
   vec3 shadowNdcPos = shadowClipPos.xyz / shadowClipPos.w;
   vec3 shadowScreenPos = shadowNdcPos * 0.5 + 0.5;
+
+	float shadow = step(shadowScreenPos.z, texture(shadowtex0, shadowScreenPos.xy).r);
+
 
   vec3 blocklight = lightmap.x * blocklightColor;
   vec3 skylight = lightmap.y * skylightColor;
   vec3 ambient = ambientColor;
-  vec3 sunlight = sunlightColor * clamp(dot(worldLightVector, normal), 0.0, 1.0) * lightmap.y;
+  vec3 sunlight = sunlightColor * clamp(dot(worldLightVector, normal), 0.0, 1.0) * shadow;
 
   color.rgb *= blocklight + skylight + ambient + sunlight;
 }
