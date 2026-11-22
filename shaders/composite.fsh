@@ -11,6 +11,9 @@ uniform sampler2D depthtex0;
 
 uniform vec3 shadowLightPosition;
 uniform mat4 gbufferModelViewInverse;
+uniform mat4 gbufferProjectionInverse;
+uniform mat4 shadowModelView;
+uniform mat4 shadowProjection;
 
 const vec3 blocklightColor = vec3(1.0, 0.5, 0.08);
 const vec3 skylightColor = vec3(0.05, 0.15, 0.3);
@@ -21,6 +24,11 @@ in vec2 texcoord;
 
 /* RENDERTARGETS: 0 */
 layout(location = 0) out vec4 color;
+
+vec3 projectAndDivide(mat4 projectionMatrix, vec3 position){
+   vec4 homPos = projectionMatrix * vec4(position, 1.0);
+   return homPos.xyz / homPos.w;
+ }
 
 void main() {
   vec2 lightmap = texture(colortex1, texcoord).xy;
@@ -36,6 +44,14 @@ void main() {
     if (depth == 1.0) {
         return; // let's skip whats beneath us - the lighting apply logic!
     }
+
+	vec3 ndcPos = vec3(texcoord.xy, depth) * 2.0 - 1.0; // normalized device coordinates (NDC); [-1.0, 1.0]
+  vec3 viewPos = projectAndDivide(gbufferProjectionInverse, ndcPos); // position in view space
+  vec3 feetPlayerPos = (gbufferModelViewInverse * vec4(viewPos, 1.0)).xyz; // position relative to the feet of the player
+  vec3 shadowViewPos = (shadowModelView * vec4(feetPlayerPos, 1.0)).xyz;
+  vec4 shadowClipPos = shadowProjection * vec4(shadowViewPos, 1.0);
+  vec3 shadowNdcPos = shadowClipPos.xyz / shadowClipPos.w;
+  vec3 shadowScreenPos = shadowNdcPos * 0.5 + 0.5;
 
   vec3 blocklight = lightmap.x * blocklightColor;
   vec3 skylight = lightmap.y * skylightColor;
