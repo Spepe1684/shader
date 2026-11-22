@@ -1,6 +1,7 @@
 #version 330 compatibility
 
 uniform sampler2D gtexture;
+uniform sampler2D lightmap;
 
 uniform float alphaTestRef = 0.1;
 
@@ -18,9 +19,10 @@ in vec3 normal;
 
 void main() {
 	color = texture(gtexture, texcoord) * glcolor;
-	
+	color *= texture(lightmap, lmcoord);
+
 	lightLevelData = vec4(lmcoord, 0.0, 1.0); // this will write to buffer #1, as we defined above!
-	
+	encodedNormal = vec4(normal * 0.5 + 0.5, 1.0);
 
 	if (color.a < alphaTestRef) {
 		discard;
