@@ -11,7 +11,7 @@ in vec4 glcolor;
 layout(location = 0) out vec4 color;
 
 void main() {
-	color = texture(gtexture, texcoord) * glcolor;
+	color.rgb *= vec3(1.0, 0.86, 0.58); 
 	if (color.a < alphaTestRef) {
 		discard;
 	}

@@ -19,6 +19,13 @@ in vec3 normal;
 
 void main() {
 	color = texture(gtexture, texcoord) * glcolor;
+
+	float greenMask = smoothstep(
+    0.02, 0.18,
+    color.g - max(color.r, color.b)
+	);
+	color.rgb = mix(color.rgb, vec3(0.60, 0.72, 0.48), greenMask * 0.30);
+
 	color *= texture(lightmap, lmcoord);
 
 	lightLevelData = vec4(lmcoord, 0.0, 1.0); // this will write to buffer #1, as we defined above!
