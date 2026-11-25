@@ -12,7 +12,7 @@ uniform vec3 cameraPosition;
 
 in vec2 texcoord;
 
-const float FOG_DENSITY = 5.0;
+const float FOG_DENSITY = 3.5;
 
 
 vec3 projectAndDivide(mat4 projectionMatrix, vec3 position){
@@ -81,5 +81,5 @@ void main() {
     float dist = length(viewPos) / far;
     float fogFactor = exp(-FOG_DENSITY * (1.0 - dist));
 
-    color.rgb = mix(color.rgb, pow(fogColor, vec3(2.2)), clamp(fogFactor, 0.0, 1.0));
-}
+    vec3 pinkFog = vec3(0.82, 0.48, 0.68);
+    color.rgb = mix(color.rgb, pow(pinkFog, vec3(2.2)), clamp(fogFactor, 0.0, 1.0));}
