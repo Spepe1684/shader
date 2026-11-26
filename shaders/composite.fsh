@@ -67,7 +67,7 @@ void main() {
   vec3 lightVector = normalize(shadowLightPosition);
   vec3 worldLightVector = mat3(gbufferModelViewInverse) * lightVector;
 
-  color = 1.0 - texture(colortex0, texcoord);
+  color = texture(colortex0, texcoord);
    color.rgb = pow(color.rgb, vec3(2.2));
 
     float depth = texture(depthtex0, texcoord).r;
