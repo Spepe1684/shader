@@ -21,6 +21,8 @@ void main() {
 	float ripple = sin(gl_FragCoord.x * 0.06 + frameTimeCounter * 1.2);
 	color.rgb *= 1.0 + 0.03 * ripple;
 	color *= texture(lightmap, lmcoord);
+	color.rgb = mix(color.rgb, vec3(0.08, 0.72, 0.68), 0.35);
+	color.a = 1.0;
 
 	vec3 N = normalize(waterNormal);
 	vec3 V = normalize(-waterViewPos);
